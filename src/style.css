@@ -1,0 +1,29 @@
+:root { color-scheme: light; }
+html, body { margin: 0; background: #fff; color: #111; font-family: system-ui, "Noto Sans TC", sans-serif; }
+:lang(ja) { font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif; }
+main { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+footer { max-width: 640px; margin: 48px auto 24px; padding: 0 16px; font-size: 12px; color: #666; }
+h1 { font-size: 20px; font-weight: 600; margin: 0 0 24px; }
+fieldset { border: 1px solid #ccc; margin: 0 0 16px; padding: 12px; }
+legend { font-size: 14px; color: #444; }
+label { display: inline-block; margin-right: 16px; }
+button { font: inherit; padding: 10px 16px; border: 1px solid #111; background: #fff; cursor: pointer; }
+button:disabled { opacity: .4; cursor: default; }
+button.primary { background: #111; color: #fff; }
+input[type=text] { font: inherit; padding: 8px; border: 1px solid #999; width: 100%; box-sizing: border-box; }
+.progress { font-size: 13px; color: #666; margin-bottom: 32px; }
+.word { font-size: 48px; text-align: center; margin: 24px 0 40px; line-height: 1.4; }
+.word rt { font-size: 16px; }
+.choices { display: grid; gap: 10px; }
+.choices button { text-align: left; }
+.choices button.correct { border-color: #080; background: #e8f5e9; }
+.choices button.wrong { border-color: #c00; background: #fdecea; }
+.reveal { margin-top: 24px; padding: 16px; border: 1px solid #ccc; }
+.reveal .big { font-size: 28px; }
+.result { text-align: center; }
+.result .score { font-size: 56px; margin: 24px 0; }
+.key { font-family: ui-monospace, monospace; font-size: 32px; letter-spacing: .3em; }
+.key-row { margin-top: 24px; font-size: 13px; color: #666; }
+.key-row input { width: 8em; font-family: ui-monospace, monospace; text-transform: uppercase; }
+.muted { color: #666; font-size: 13px; }
+.error { color: #c00; }
