@@ -36,6 +36,20 @@ describe("pickDistractors", () => {
     expect(d).not.toContain("same");
     expect(new Set(d).size).toBe(3);
   });
+  it("prefers distractors in the same gloss language as the target", () => {
+    const zh = (id: string, gloss: string): Word => ({ ...w(id, gloss), glossLang: "zh" });
+    const target = zh("t", "目標");
+    const p = [target, w("e1", "en1"), w("e2", "en2"), w("e3", "en3"), zh("z1", "甲"), zh("z2", "乙"), zh("z3", "丙")];
+    const d = pickDistractors(p, target, 3, Math.random);
+    expect(d.sort()).toEqual(["丙", "乙", "甲"]);
+  });
+  it("falls back to other-language distractors when needed", () => {
+    const zh = (id: string, gloss: string): Word => ({ ...w(id, gloss), glossLang: "zh" });
+    const target = zh("t", "目標");
+    const d = pickDistractors([target, zh("z1", "甲"), w("e1", "en1"), w("e2", "en2")], target, 3, Math.random);
+    expect(d).toHaveLength(3);
+    expect(d).toContain("甲");
+  });
   it("returns fewer when the pool cannot supply enough", () => {
     const target = w("t", "same");
     expect(pickDistractors([target, w("b", "x")], target, 3, Math.random)).toEqual(["x"]);

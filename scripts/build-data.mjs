@@ -77,6 +77,7 @@ function cleanGloss(g) {
     .replace(/^[（(\[［〔][^）)\]］〕]*[)）\]］〕]\s*/, "") // leading usage note
     .replace(/[。．]+$/g, "")
     .replace(/[。．]\s*/g, "，")
+    .split("/").filter((part, i, a) => a.indexOf(part) === i).join("/") // s2twp can merge 出租車/的士 into 計程車/計程車
     .trim();
   if (!c || c.length > 40 || HAS_KANA.test(c)) return null;
   return c;

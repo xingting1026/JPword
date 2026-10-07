@@ -27,3 +27,4 @@ input[type=text] { font: inherit; padding: 8px; border: 1px solid #999; width: 1
 .key-row input { width: 8em; font-family: ui-monospace, monospace; text-transform: uppercase; }
 .muted { color: #666; font-size: 13px; }
 .error { color: #c00; }
+.ok { color: #080; }
