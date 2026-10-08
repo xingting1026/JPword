@@ -73,13 +73,13 @@ function cleanGloss(g) {
   const c = s2twp(g)
     .replace(/\s+/g, " ")
     .replace(/【[^】]*】/g, "")
-    .replace(/\s*[（(][A-Za-zāīūēō\-\s'.,;]+[)）]/g, "") // romanisation like (ao-shingō)
+    .replace(/\s*[（(][^（）()]*[A-Za-zāīūēō][^（）()]*[)）]/g, "") // parentheticals with romanisation, e.g. (nyōbō kotoba，“女性用語”)
     .replace(/^[（(\[［〔][^）)\]］〕]*[)）\]］〕]\s*/, "") // leading usage note
     .replace(/[。．]+$/g, "")
     .replace(/[。．]\s*/g, "，")
     .split("/").filter((part, i, a) => a.indexOf(part) === i).join("/") // s2twp can merge 出租車/的士 into 計程車/計程車
     .trim();
-  if (!c || c.length > 40 || HAS_KANA.test(c)) return null;
+  if (!c || c.length > 40 || HAS_KANA.test(c) || /[A-Za-z]/.test(c)) return null; // the quiz must show no English
   return c;
 }
 for (const [name, url, simplified] of KAIKKI) {
@@ -182,8 +182,12 @@ function pickZh(word, reading) {
   return fromHeadword(word, reading, singleKanji) ?? fromKanaEntry(word, reading);
 }
 
-// 4. merge and write
+// 4. merge and write. data/zh-overrides.json (id → 繁體中文 gloss) fills words that
+// Wiktionary lacks; it was produced by AI translation and reviewed by hand.
+const overridesPath = new URL("data/zh-overrides.json", ROOT);
+const overrides = existsSync(overridesPath) ? JSON.parse(readFileSync(overridesPath, "utf8")) : {};
 let zhCount = 0;
+let overrideCount = 0;
 let total = 0;
 for (const lv of LEVELS) {
   const words = openjlpt[lv].map((e) => {
@@ -192,7 +196,8 @@ for (const lv of LEVELS) {
     const kana = [e.reading, ...(jm?.kana ?? [])].filter((k, i, a) => a.indexOf(k) === i);
     const glossEn = e.meanings.slice(0, 3).join("; ");
     let zh = pickZh(e.word, e.reading);
-    if (zh && zh === e.word) zh = `${zh}（${glossEn}）`; // 同形同義語: make the gloss read as a definition
+    if (zh === e.word) zh = null; // 同形同義語: a gloss identical to the headword explains nothing
+    if (!zh && overrides[e.id]) { zh = overrides[e.id]; overrideCount++; }
     if (zh) zhCount++;
     total++;
     return {
@@ -210,4 +215,4 @@ for (const lv of LEVELS) {
   writeFileSync(new URL(`${lv}.json`, OUT), JSON.stringify(words));
   console.log(lv, words.length, "words");
 }
-console.log(`Chinese gloss coverage: ${zhCount}/${total} (${((100 * zhCount) / total).toFixed(1)}%)`);
+console.log(`Chinese gloss coverage: ${zhCount}/${total} (${((100 * zhCount) / total).toFixed(1)}%), ${overrideCount} from zh-overrides.json`);

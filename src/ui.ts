@@ -146,7 +146,6 @@ function renderQuestion(root: HTMLElement, round: Round, q: Question, notice: st
     const w = q.word;
     const primaryKana = w.kana[0] ?? "";
     const glossLine = el("div", {}, w.gloss);
-    if (w.glossLang === "zh") glossLine.append(el("span", { class: "muted" }, `　${w.glossEn}`));
     reveal.replaceChildren(
       el("div", { class: ok ? "ok" : "error" }, ok ? "✓ 答對" : "✗ 答錯"),
       el("div", { class: "big" }, w.kanji ? rubyWord(w.kanji, primaryKana) : ja(primaryKana)),
